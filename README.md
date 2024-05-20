@@ -1,0 +1,1 @@
+# Semanticka-segmentace-leteckych-snimku
