@@ -14,6 +14,7 @@ from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
 import tensorflow.keras.backend as K
+import time
 
 
 def predict_modelA(image_path, scale):
@@ -47,7 +48,7 @@ def predict_modelA(image_path, scale):
     image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
 
     image_scaled = cv2.resize(image_rgb, (image_rgb.shape[1] // scale, image_rgb.shape[0] // scale))
-    print("Scaled image shape:", image_scaled.shape)
+    # print("Scaled image shape:", image_scaled.shape)
 
     height = image_scaled.shape[0]
     width = image_scaled.shape[1]
@@ -62,6 +63,8 @@ def predict_modelA(image_path, scale):
     # print("initial patches:", patches.shape)
 
     pred_image = np.zeros_like(image_cropped)
+
+    start_time = time.time()
 
     for i in range(patches.shape[0]):
         for j in range(patches.shape[1]):
@@ -83,6 +86,10 @@ def predict_modelA(image_path, scale):
 
             pred_image[i*patch_size:(i+1)*patch_size, j*patch_size:(j+1)*patch_size] = predicted_patch_rgb
 
+    end_time = time.time()
+    final_time = end_time - start_time
+
+    print("FINNAL TIME:", final_time)
 
     print("Predicted image shape:", pred_image.shape)
 

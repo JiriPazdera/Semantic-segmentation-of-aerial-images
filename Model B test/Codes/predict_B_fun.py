@@ -14,6 +14,7 @@ from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
 import tensorflow.keras.backend as K
+import time
 
 
 def predict_modelB(image_path, scale):    
@@ -47,7 +48,6 @@ def predict_modelB(image_path, scale):
     # scale = 2
 
     image_bgr = cv2.imread(image_path)
-    # image_bgr = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
 
     image_scaled = cv2.resize(image_bgr, (image_bgr.shape[1] // scale, image_bgr.shape[0] // scale))
 
@@ -61,20 +61,22 @@ def predict_modelB(image_path, scale):
 
     
 
-    print("INPUT IMAGE", image_bgr.shape)
-    print("SCALE =",scale)
-    print("SCALED IMAGE", image_scaled.shape)
-    print("CROPPED IMAGE", image_cropped.shape)
+    print("Original image shape:", image_bgr.shape)
+    # print("SCALE =",scale)
+    # print("Scaled image shape:", image_scaled.shape)
+    # print("CROPPED IMAGE", image_cropped.shape)
 
     patches = patchify(image_cropped,(patch_size, patch_size, 3), step=patch_size)
-    print("initial patches:", patches.shape)
+    # print("initial patches:", patches.shape)
 
     pred_image = np.zeros((image_cropped.shape[0], image_cropped.shape[1],1))
+
+    start_time = time.time()
 
     for i in range(patches.shape[0]):
         for j in range(patches.shape[1]):
 
-            print("Predicting patch:",i,j)
+            # print("Predicting patch:",i,j)
 
             patch = patches[i,j]
 
@@ -87,8 +89,14 @@ def predict_modelB(image_path, scale):
             class_matrix = np.where(predicted_patch < 0.1, 1, 0)
 
             pred_image[i*patch_size:(i+1)*patch_size, j*patch_size:(j+1)*patch_size] = class_matrix
+    
+    end_time = time.time()
+    final_time = end_time - start_time
 
-    print("PREDICTION FINISHED")
+    print("FINAL TIME:", final_time)
+
+    # print("PREDICTION FINISHED")
     # print("PREDICTION SHAPE AND VALUES:",pred_image.shape, np.unique(pred_image))
+    print("Predicted image shape:", pred_image.shape)
 
     return image_bgr, image_cropped, pred_image
