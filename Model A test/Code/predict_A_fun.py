@@ -18,11 +18,18 @@ import time
 
 
 def predict_modelA(image_path, scale):
+    
     def jaccard_index(y_true, y_pred):
-        return 0
+        y_true_f = K.flatten(y_true)
+        y_pred_f = K.flatten(y_pred)
+        intersection = K.sum(y_true_f * y_pred_f)
+        return (intersection + 1.0) / (K.sum(y_true_f) + K.sum(y_pred_f) - intersection + 1.0)
 
     def iou_coefficient(y_true, y_pred):
-        return 0
+        y_true_f = K.flatten(y_true)
+        y_pred_f = K.flatten(y_pred)
+        intersection = K.sum(y_true_f * y_pred_f)
+        return (intersection + 1.0) / (K.sum(y_true_f) + K.sum(y_pred_f) - intersection + 1.0)
     
     
     model_dir = 'C:/Users/jiric/Documents/VUT/BP/CODES/'
