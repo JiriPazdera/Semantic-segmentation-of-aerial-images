@@ -1,2 +1,1 @@
-# Semanticka-segmentace-leteckych-snimku
-Výsledky diplomové práce
+# Výsledky bakalářské práce
